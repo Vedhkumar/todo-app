@@ -5,8 +5,8 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: tododb
-      POSTGRES_USER: todo
-      POSTGRES_PASSWORD: todo
+      POSTGRES_USER: your_db_user
+      POSTGRES_PASSWORD: your_secure_password
     volumes:
       - pgdata:/var/lib/postgresql/data
   backend:
@@ -14,7 +14,7 @@ services:
     container_name: todo-backend
     restart: unless-stopped
     environment:
-      - DATABASE_URL=postgresql://todo:todo@postgres:5432/tododb
+      - DATABASE_URL=postgresql://your_db_user:your_secure_password@postgres:5432/tododb
     depends_on:
       - postgres
   frontend:
