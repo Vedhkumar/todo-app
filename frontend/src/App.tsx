@@ -1,25 +1,27 @@
-import { useEffect, useState, useCallback } from 'react';
-import { getTodos, type Todo } from './api';
-import AddTodo from './components/AddTodo';
-import TodoList from './components/TodoList';
+import { useEffect, useState } from "react";
+import { getTodos, type Todo } from "./api";
+import AddTodo from "./components/AddTodo";
+import TodoList from "./components/TodoList";
 
 export default function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [error, setError] = useState('');
-
-  const fetchTodos = useCallback(async () => {
-    try {
-      setError('');
-      const data = await getTodos();
-      setTodos(data);
-    } catch {
-      setError('Could not connect to the server. Is the backend running?');
-    }
-  }, []);
+  const [error, setError] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    fetchTodos();
-  }, [fetchTodos]);
+    const fetchTodos = async () => {
+      try {
+        setError("");
+        const data = await getTodos();
+        setTodos(data);
+      } catch {
+        setError("Could not connect to the server. Is the backend running?");
+      }
+    };
+    void fetchTodos();
+  }, [refreshKey]);
+
+  const refresh = () => setRefreshKey((k) => k + 1);
 
   const remaining = todos.filter((t) => !t.completed).length;
 
@@ -35,11 +37,11 @@ export default function App() {
           )}
         </header>
 
-        <AddTodo onAdded={fetchTodos} />
+        <AddTodo onAdded={refresh} />
 
         {error && <p className="error-msg">{error}</p>}
 
-        <TodoList todos={todos} onChange={fetchTodos} />
+        <TodoList todos={todos} onChange={refresh} />
       </div>
     </div>
   );
