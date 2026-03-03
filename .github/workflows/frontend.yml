@@ -61,4 +61,4 @@ jobs:
         with:
           push: true
           context: frontend
-          tag: ${{secrets.DOCKERHUB_USERNAME}}/todo-frontend:latest
+          tags: ${{secrets.DOCKERHUB_USERNAME}}/todo-frontend:latest
